@@ -62,7 +62,7 @@ const HeroAnimation = () => {
             exit={{ opacity: 0 }}
             className="absolute top-20 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-yellow-200 blur-3xl opacity-40"
           />
-        )}
+        )}  
       </AnimatePresence>
 
       {showFinal && (
