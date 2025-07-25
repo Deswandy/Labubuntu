@@ -81,7 +81,7 @@ const Homepage = () => {
               <Image src="/home/logo.png" alt="Logo" width={40} height={50} />
             </div>
 
-            <div className="flex flex-col justify-start h-full text-start px-20 mt-30 lg:mt-0">
+            <div className="flex flex-col justify-start h-full text-start px-24 mt-30 lg:mt-2">
               <p className="lg:text-[56px] text-[48px] text-white font-poppins">Trying to save your</p>
               <p className="text-[64px] text-white font-inter font-semibold">MONEY</p>
             </div>
