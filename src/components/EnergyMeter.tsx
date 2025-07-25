@@ -18,7 +18,7 @@ import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function EnergyMeter() {
+export default function EnergyMeter({ name, desc }: { name: string, desc: string }) {
   const { data, connected, connect } = useBLE();
   const [startTime, setStartTime] = useState<number | null>(null);
   const [timeSeries, setTimeSeries] = useState<
@@ -33,6 +33,7 @@ export default function EnergyMeter() {
   } | null>(null);
 
   const router = useRouter();
+  
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -56,51 +57,68 @@ export default function EnergyMeter() {
     ]);
   }, [data, startTime]);
 
-  useEffect(() => {
-    if (startTime && Date.now() - startTime >= 30_000 && summary === null) {
-      // Calculate summary after 30 seconds
-      const voltages = data.map((d) => d.voltage);
-      const currents = data.map((d) => d.current);
-      const powers = data.map((d) => d.power);
+useEffect(() => {
+  if (startTime && Date.now() - startTime >= 30_000 && summary === null) {
+    // Calculate summary after 30 seconds
+    const voltages = data.map((d) => d.voltage);
+    const currents = data.map((d) => d.current);
+    const powers = data.map((d) => d.power);
 
-      const avrg_voltage = voltages.reduce((a, b) => a + b, 0) / voltages.length;
-      const avrg_current = currents.reduce((a, b) => a + b, 0) / currents.length;
-      const avrg_power = powers.reduce((a, b) => a + b, 0) / powers.length;
+    const avrg_voltage = voltages.reduce((a, b) => a + b, 0) / voltages.length;
+    const avrg_current = currents.reduce((a, b) => a + b, 0) / currents.length;
+    const avrg_power = powers.reduce((a, b) => a + b, 0) / powers.length;
 
-      // Energy in kWh = (Watt avg * time) / (1000 * 3600)
-      const avrg_energy = (avrg_power * 30) / 3600 / 1000;
+    // Measured energy during 30s in kWh
+    const avrg_energy = (avrg_power * 30) / 3600 / 1000;
 
-      const cost = avrg_energy * 1700;
+    // Project to monthly: average power x 720 hours (30 days)
+    const projected_monthly_energy = (avrg_power / 1000) * 720;
 
-      setSummary({
-        avrg_voltage,
-        avrg_current,
-        avrg_power,
-        avrg_energy,
-        cost,
-      });
-    }
-  }, [startTime, data, summary]);
+    // Cost using rate per kWh
+    const cost = projected_monthly_energy * 1700;
+
+    setSummary({
+      avrg_voltage,
+      avrg_current,
+      avrg_power,
+      avrg_energy: projected_monthly_energy,
+      cost,
+    });
+  }
+}, [startTime, data, summary]);
+
 
 const handleNext = async () => {
   const supabase = createClient();
 
-  const { error } = await supabase.from('items').insert({
-    name: 'ESP32 Meter Session',
-    cost: summary?.cost ?? 0,
-    desc: 'Auto-generated session',
-    id_category: 1, // adjust to match your DB schema
+  // Try get signed in user
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData?.user?.id ?? '00000000-0000-0000-0000-000000000000'; // fallback UUID for testing
+
+  const payload = {
+    name,
+    desc,
+    cost: Math.round(summary?.cost ?? 0),
+    voltage: data.map((d) => d.voltage),
+    current: data.map((d) => d.current),
+    power_consumption: data.map((d) => d.power),
+    energy_consumption: [summary?.avrg_energy ?? 0],
     avrg_voltage: summary?.avrg_voltage ?? 0,
     avrg_current: summary?.avrg_current ?? 0,
     avrg_power: summary?.avrg_power ?? 0,
     avrg_energy: summary?.avrg_energy ?? 0,
-  });
+    id_user: userId,
+  };
 
-  if (error) {
-    console.error('Supabase insert error:', error);
-  } else {
-    router.push('/dashboard');
-  }
+  console.log('Payload:', payload);
+
+const { error } = await supabase.from('items').insert(payload);
+
+if (error) {
+  console.error('Supabase insert error:', JSON.stringify(error, null, 2));
+} else {
+  router.push('/dashboard');
+}
 };
 
 
@@ -108,7 +126,7 @@ const handleNext = async () => {
 
   return (
     <div className="space-y-6">
-      <Card className=''>
+      <Card>
         <CardHeader>
           <CardTitle>ESP32 Energy Meter</CardTitle>
         </CardHeader>
@@ -130,41 +148,13 @@ const handleNext = async () => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={timeSeries}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="time"
-                    label={{
-                      value: 'Time (s)',
-                      position: 'insideBottomRight',
-                      offset: -5,
-                    }}
-                  />
-                  <YAxis
-                    label={{
-                      value: 'Value',
-                      angle: -90,
-                      position: 'insideLeft',
-                    }}
-                  />
+                  <XAxis dataKey="time" />
+                  <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="voltage"
-                    stroke="#8884d8"
-                    name="Voltage (V)"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="current"
-                    stroke="#82ca9d"
-                    name="Current (mA)"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="power"
-                    stroke="#ff7300"
-                    name="Power (W)"
-                  />
+                  <Line type="monotone" dataKey="voltage" stroke="#8884d8" />
+                  <Line type="monotone" dataKey="current" stroke="#82ca9d" />
+                  <Line type="monotone" dataKey="power" stroke="#ff7300" />
                 </LineChart>
               </ResponsiveContainer>
             )}
@@ -184,7 +174,7 @@ const handleNext = async () => {
             <p>🔢 Average Energy: {summary.avrg_energy.toFixed(4)} kWh</p>
             <p>💰 Cost: Rp {Math.round(summary.cost)}</p>
             <Button className="mt-4" onClick={handleNext}>
-              Next
+              Save & Go to Dashboard
             </Button>
           </CardContent>
         </Card>
