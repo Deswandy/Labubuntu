@@ -13,6 +13,7 @@ import {
   FormControl,
   FormMessage
 } from "@/components/ui/form"
+import Bluetooth from "@/components/bluetooth"
 
 export default function Page() {
   const [result, setResult] = useState<string | null>(null)
@@ -72,7 +73,7 @@ export default function Page() {
 
       {result && (
         <div>
-          
+          <Bluetooth />
         </div>
       )}
     </section>
