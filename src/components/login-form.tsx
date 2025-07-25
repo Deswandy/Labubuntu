@@ -18,12 +18,12 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
     const handleSignIn = async () => {
     const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-        options: {
-        redirectTo: `${location.origin}/dashboard`
-      }
-    });
+await supabase.auth.signInWithOAuth({
+  provider: 'google',
+  options: {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`
+  }
+});
     
   };
   return (
