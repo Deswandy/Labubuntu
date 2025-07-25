@@ -9,7 +9,7 @@ import {
 export default function Page() {
   return (
     <section>
-        Nigga
+        Wandy
     </section>
   )
 }

@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import 'aos/dist/aos.css';
 
 const Homepage = () => {
   const [isOn, setIsOn] = useState(false);
@@ -118,12 +119,22 @@ const Homepage = () => {
 
             <div className="flex justify-center items-center mt-14">
               <button className="z-10 lg:mt-6 bg-gradient-to-b from-[#384F1F] to-[#0b280a] text-white text-[14px] lg:text-[16px] rounded-sm font-semibold font-inter w-[360px] h-[48px]">
-                Cut your bill now
+                <Link href="/login">Cut your bill now</Link>
               </button>
             </div>
             <div className="absolute bottom-0 z-0">
-              <Image src="/home/hand.png" alt="hand" width={800} height={500}/>
+              <Image src="/home/hand.png" alt="hand" width={800} height={500} />
             </div>
+            <motion.div
+              initial={{ y: 0, opacity: 0.6 }}
+              animate={{ y: [0, 10, 0], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white text-3xl z-10"
+            >
+              <button>
+                <Link href="/about">↓</Link>
+              </button>
+            </motion.div>
           </div>
         </motion.div>
       )}
