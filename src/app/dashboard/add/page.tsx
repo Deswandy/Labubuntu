@@ -13,7 +13,7 @@ import {
   FormControl,
   FormMessage
 } from "@/components/ui/form"
-import Bluetooth from "@/components/bluetooth"
+import Bluetooth from "@/components/EnergyMeter"
 
 export default function Page() {
   const [result, setResult] = useState<string | null>(null)

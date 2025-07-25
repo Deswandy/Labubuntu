@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react';
 // Extend Navigator type for TypeScript
 declare global {
   interface Navigator {
-    bluetooth: Bluetooth;
+    bluetooth: any;
   }
 }
 
@@ -43,24 +43,35 @@ export function useBLE() {
       console.log('Starting notifications...');
       await characteristic.startNotifications();
 
-      characteristic.addEventListener('characteristicvaluechanged', (event) => {
-        const value = (event.target as BluetoothRemoteGATTCharacteristic).value;
-        if (!value) return;
+    // Declare BluetoothRemoteGATTCharacteristic type if not available
+    type BluetoothRemoteGATTCharacteristic = {
+      value: DataView | null;
+      addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => void;
+      startNotifications: () => Promise<void>;
+    };
 
-        const decoder = new TextDecoder('utf-8');
-        const text = decoder.decode(value);
+    interface CharacteristicValueChangedEvent extends Event {
+      target: BluetoothRemoteGATTCharacteristic & EventTarget;
+    }
 
-        console.log('Received:', text);
+    characteristic.addEventListener('characteristicvaluechanged', (event: CharacteristicValueChangedEvent) => {
+      const value: DataView | null = (event.target as BluetoothRemoteGATTCharacteristic).value;
+      if (!value) return;
 
-        const [voltStr, currentStr, powerStr] = text.split(',');
-        const voltage = parseFloat(voltStr);
-        const current = parseFloat(currentStr);
-        const power = parseFloat(powerStr);
+      const decoder: TextDecoder = new TextDecoder('utf-8');
+      const text: string = decoder.decode(value);
 
-        if (!isNaN(voltage) && !isNaN(current) && !isNaN(power)) {
-          setData((prev) => [...prev, { voltage, current, power }]);
-        }
-      });
+      console.log('Received:', text);
+
+      const [voltStr, currentStr, powerStr]: string[] = text.split(',');
+      const voltage: number = parseFloat(voltStr);
+      const current: number = parseFloat(currentStr);
+      const power: number = parseFloat(powerStr);
+
+      if (!isNaN(voltage) && !isNaN(current) && !isNaN(power)) {
+        setData((prev: EnergySample[]) => [...prev, { voltage, current, power }]);
+      }
+    });
 
       setConnected(true);
       console.log('Notifications started.');
