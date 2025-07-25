@@ -48,7 +48,7 @@ export default function Page() {
   }
 
   return (
-    <section className="p-4 max-w-md mx-auto">
+    <section className="p-4">
       <h1 className="text-xl font-bold mb-4">Add Item</h1>
 
       <Form {...form}>

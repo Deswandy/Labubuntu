@@ -107,8 +107,8 @@ const handleNext = async () => {
   const isRecording = startTime && Date.now() - startTime < 30_000;
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
-      <Card>
+    <div className="space-y-6">
+      <Card className=''>
         <CardHeader>
           <CardTitle>ESP32 Energy Meter</CardTitle>
         </CardHeader>
