@@ -1,10 +1,10 @@
 import React, {JSX} from "react";
-import HeroAnimation from "@/components/landing/HeroAnimation";
+import Homepage from "@/components/landing/Homepage";
 
 export default function Hero(){
     return (
         <div>
-            <HeroAnimation />
+            <Homepage />
         </div>
     );
 }
