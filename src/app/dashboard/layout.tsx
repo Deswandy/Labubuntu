@@ -7,7 +7,11 @@ import {
 
 import data from "./data.json"
 
-export default function Layout() {
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <SidebarProvider
       style={
@@ -19,6 +23,7 @@ export default function Layout() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
+        {children}
       </SidebarInset>
     </SidebarProvider>
   )
