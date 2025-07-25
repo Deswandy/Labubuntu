@@ -12,7 +12,7 @@ import { createClient } from "@/utils/supabase/client";
 import { DeleteButton } from "@/components/DeleteButton";
 
 export async function SectionCards() {
-  const supabase = await createClient();
+  const supabase = createClient();
   let { data: items, error } = await supabase
     .from('items')
     .select('id,name,cost,avrg_energy,avrg_current,avrg_voltage');
