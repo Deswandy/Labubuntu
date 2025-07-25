@@ -53,7 +53,17 @@ const Homepage = () => {
             />
           </motion.div>
         )}
-
+        {!isOn && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute top-[360px] left-1/2 -translate-x-1/2 text-white text-lg font-medium font-poppins z-10"
+          >
+            Tap the light
+          </motion.p>
+        )}
         {isOn && !showFinal && (
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}
@@ -78,7 +88,7 @@ const Homepage = () => {
         >
           <div>
             <div className="p-4">
-              <Image src="/home/logo.png" alt="Logo" width={40} height={50} />
+              <Image src="/home/logo-white.png" alt="Logo" width={40} height={50} />
             </div>
 
             <div className="flex flex-col justify-start h-full text-start px-24 mt-30 lg:mt-2">
@@ -86,7 +96,7 @@ const Homepage = () => {
               <p className="text-[64px] text-white font-inter font-semibold">MONEY</p>
             </div>
 
-            <div className="flex flex-col justify-end h-full text-end px-20 mt-10 lg:-mt-6">
+            <div className="flex flex-col justify-end h-full text-end px-20 mt-10 lg:-mt-10">
               <p className="lg:text-[56px] text-[48px] text-white font-poppins">Starts with your</p>
               <p className="text-[64px] text-white font-inter font-semibold">Power Bill</p>
             </div>
@@ -108,17 +118,10 @@ const Homepage = () => {
             </div>
 
             <div className="flex justify-center items-center">
-              <button className="mt-30 lg:mt-2 bg-gradient-to-b from-[#384F1F] to-[#0b280a] text-white text-[14px] lg:text-[16px] rounded-sm font-semibold font-inter w-[360px] h-[48px]">
+              <button className="mt-36 lg:mt-6 bg-gradient-to-b from-[#384F1F] to-[#0b280a] text-white text-[14px] lg:text-[16px] rounded-sm font-semibold font-inter w-[360px] h-[48px]">
                 Cut your bill now
               </button>
             </div>
-
-            <p className="mt-4 text-sm text-white text-center">
-              Already have an account?{" "}
-              <Link href="/login" className="text-yellow-400 text-center font-medium">
-                Login
-              </Link>
-            </p>
           </div>
         </motion.div>
       )}
