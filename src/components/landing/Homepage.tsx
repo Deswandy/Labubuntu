@@ -91,36 +91,38 @@ const Homepage = () => {
               <Image src="/home/logo-white.png" alt="Logo" width={40} height={50} />
             </div>
 
-            <div className="flex flex-col justify-start h-full text-start px-24 mt-30 lg:mt-2">
-              <p className="lg:text-[56px] text-[48px] text-white font-poppins">Trying to save your</p>
-              <p className="text-[64px] text-white font-inter font-semibold">MONEY</p>
-            </div>
-
-            <div className="flex flex-col justify-end h-full text-end px-20 mt-10 lg:-mt-10">
-              <p className="lg:text-[56px] text-[48px] text-white font-poppins">Starts with your</p>
-              <p className="text-[64px] text-white font-inter font-semibold">Power Bill</p>
-            </div>
-
-            <div className="flex flex-col lg:flex-row justify-start items-start lg:justify-center lg:items-center h-full mx-auto gap-4 mt-20 lg:mt-5 px-20">
+            <div className="flex flex-col justify-start lg:flex-row lg:justify-center items-center h-full mx-auto gap-5 mt-20 lg:mt-5 lg:px-20 px-10">
               <Image
                 src="/home/Frugal.png"
                 alt="Frugal"
-                width={360}
-                height={300}
+                width={460}
+                height={400}
               />
               <Image
                 src="/home/Watt.png"
                 alt="Watt"
-                width={280}
-                height={250}
-                className="lg:mb-5"
+                width={360}
+                height={270}
+                className="lg:mb-8"
               />
             </div>
+            <div className="flex flex-col justify-start h-full text-start px-14 lg:px-64 mt-10 lg:mt-2">
+              <p className="lg:text-[44px] text-[28px] text-white font-poppins z-10">Trying to save your</p>
+              <p className="text-[48px] text-white font-inter font-semibold z-10 -mt-4">MONEY</p>
+            </div>
 
-            <div className="flex justify-center items-center">
-              <button className="mt-36 lg:mt-6 bg-gradient-to-b from-[#384F1F] to-[#0b280a] text-white text-[14px] lg:text-[16px] rounded-sm font-semibold font-inter w-[360px] h-[48px]">
+            <div className="flex flex-col justify-start lg:justify-end lg:text-end h-full text-start px-14 lg:px-64 -mt-3 lg:-mt-12">
+              <p className="lg:text-[44px] text-[28px] text-white font-poppins z-10">Starts with your</p>
+              <p className="text-[48px] text-white font-inter font-semibold z-10 -mt-4">Power Bill</p>
+            </div>
+
+            <div className="flex justify-center items-center mt-14">
+              <button className="z-10 lg:mt-6 bg-gradient-to-b from-[#384F1F] to-[#0b280a] text-white text-[14px] lg:text-[16px] rounded-sm font-semibold font-inter w-[360px] h-[48px]">
                 Cut your bill now
               </button>
+            </div>
+            <div className="absolute bottom-0 z-0">
+              <Image src="/home/hand.png" alt="hand" width={800} height={500}/>
             </div>
           </div>
         </motion.div>
