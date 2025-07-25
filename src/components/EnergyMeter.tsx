@@ -82,33 +82,27 @@ export default function EnergyMeter() {
     }
   }, [startTime, data, summary]);
 
-  const handleNext = async () => {
-    const supabase = createClient();
+const handleNext = async () => {
+  const supabase = createClient();
 
-    const userId = 'YOUR_USER_ID'; // Replace with your auth user ID
+  const { error } = await supabase.from('items').insert({
+    name: 'ESP32 Meter Session',
+    cost: summary?.cost ?? 0,
+    desc: 'Auto-generated session',
+    id_category: 1, // adjust to match your DB schema
+    avrg_voltage: summary?.avrg_voltage ?? 0,
+    avrg_current: summary?.avrg_current ?? 0,
+    avrg_power: summary?.avrg_power ?? 0,
+    avrg_energy: summary?.avrg_energy ?? 0,
+  });
 
-    const { error } = await supabase.from('YOUR_TABLE').insert({
-      name: 'ESP32 Meter Session',
-      cost: summary?.cost ?? 0,
-      desc: 'Auto-generated session',
-      id_category: 1, // adjust as needed
-      voltage: data.map((d) => d.voltage),
-      current: data.map((d) => d.current),
-      power_consumption: data.map((d) => d.power),
-      energy_consumption: [summary?.avrg_energy ?? 0],
-      avrg_voltage: summary?.avrg_voltage ?? 0,
-      avrg_current: summary?.avrg_current ?? 0,
-      avrg_power: summary?.avrg_power ?? 0,
-      avrg_energy: summary?.avrg_energy ?? 0,
-      id_user: userId,
-    });
+  if (error) {
+    console.error('Supabase insert error:', error);
+  } else {
+    router.push('/dashboard');
+  }
+};
 
-    if (error) {
-      console.error('Supabase insert error:', error);
-    } else {
-      router.push('/dashboard');
-    }
-  };
 
   const isRecording = startTime && Date.now() - startTime < 30_000;
 
